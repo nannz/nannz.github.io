@@ -1,0 +1,13 @@
+body{
+    font-family: 'Slabo 27px', serif;
+    text-align: center;
+}
+
+h1{
+    text-align: center;
+    font-size: 100px;
+}
+
+#date{
+    font-size: 40px;
+}

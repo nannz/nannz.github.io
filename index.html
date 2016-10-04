@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Lab</title>
+    <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script>
+
+
+        function getWeatherData(loc) {
+            console.log('getWeatherData', loc);
+            var baseUrl= 'http://api.worldweatheronline.com/free/v1/weather.ashx?key=';
+            var apiKey = '52gw56d222szc2yyd72bjkpd';
+            var query = '&q='+loc.lat+','+loc.lng+'&format=json&num_of_day=1';
+            var requestUrl = baseUrl + apiKey + query;
+            console.log(requestUrl);
+
+            $.ajax({
+                url: requestUrl,
+                dataType: 'jsonp',
+            }).done(function(result) {
+                console.log('result', result);
+                try {
+                    var currentCondition = result.data.current_condition[0];
+                    console.log(currentCondition.temp_C);
+                    temprature(currentCondition.temp_C);
+                    var w = currentCondition.weatherDesc[0].value;
+                    console.log(w);
+                    var url = currentCondition.weatherIconUrl[0].value;
+                    console.log(url);
+                    $('#container1').append('<img src="'+url+'" alt="clear" height="80" width="80"/>');
+
+                    var weather = result.data.weather[0];
+                    console.log(weather);
+
+                    var tempMaxWeather = weather.tempMaxC;
+                    var tempMinWeather = weather.tempMinC;
+                    console.log("tmax: "+ tempMaxWeather);
+                    console.log("tmin: "+ tempMinWeather);
+                    $('#container2').append('<h4>Temprature Max: '+tempMaxWeather+' C</h4>');
+                    $('#container2').append('<h4>Temprature Min: '+tempMinWeather+' C</h4>');
+
+                    var date = weather.date;
+                    console.log("date: "+ date);
+                    $('#date').append('<h4>'+date+'</h4>');
+                }catch(error) {
+                    console.log('weather error', error);
+                }
+            });
+        };
+
+
+        function temprature(c){
+            $('#currentTemp').append('<h4>Current Temprature: '+c+' C</h4>');
+//            if(c<10){
+//                $('#container').append('<img src="low.png" alt="low" />');
+//            }else if (c<30){
+//                $('#container').append('<img src="mid.png" alt="mid" />');
+//            }else{
+//                $('#container').append('<img src="high.png" alt="high" />');
+//            };
+        };
+
+        getWeatherData({'lat': 31.20, 'lng': 121.5}); //shanghai
+    </script>
+</head>
+
+<body>
+<h1>Shanghai</h1>
+<div id = "date"></div>
+
+<div id="container1"></div>
+<div id="currentTemp"></div>
+<div id="container2"></div>
+
+</body>
+</html>
