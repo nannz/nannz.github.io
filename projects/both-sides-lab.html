@@ -8,32 +8,79 @@
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="//toolness.github.io/p5.js-widget/p5-widget.js"></script>
     <style>
-        body{
+        body {
             display: flex;
         }
-        iframe{ border: none; }
+
+        iframe {
+            border: none;
+        }
+
+        .mdl-cell {
+            box-sizing: border-box;
+            background-color: #BDBDBD;
+            /*height: 200px;*/
+            width: 200px;
+            height: 200px;
+            padding: 0;
+            color: white;
+        }
     </style>
 </head>
 <body>
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
-            mdl-layout--fixed-header">
+<div class="mdl-layout mdl-js-layout">
     <!--<header class="mdl-layout__header">-->
-       <!---->
+    <!---->
     <!--</header>-->
+    <header class="mdl-layout__header mdl-layout__header--scroll">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">Two Sides LAB</span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation -->
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+            </nav>
+        </div>
+    </header>
     <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">Two Sides LAB</span>
+        <span class="mdl-layout-title">Programming + Philosophy</span>
+        <span class="mdl-layout-title">By Nan & Hymn</span>
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link" href="">1-door</a>
+            <a class="mdl-navigation__link" href="">2-clock</a>
         </nav>
     </div>
-    <main class="mdl-layout__content">
-        <div class="page-content">
+
+    <!--<main class="mdl-layout__content">-->
+    <!--<div class="page-content">-->
+    <!--<a class="mdl-navigation__link" href="https://nannz.github.io/projects/both-sides-lab/1-door/index.html">-->
+    <!--<iframe src="https://nannz.github.io/projects/both-sides-lab/1-door/index.html" width="400px" height="400px">-->
+    <!--</iframe>-->
+    <!--</a>-->
+    <!--</div>-->
+    <!--</main>-->
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--1-col">
             <a class="mdl-navigation__link" href="https://nannz.github.io/projects/both-sides-lab/1-door/index.html">
-            <iframe src="https://nannz.github.io/projects/both-sides-lab/1-door/index.html" width="400px" height="400px">
-            </iframe>
+                <iframe src="https://nannz.github.io/projects/both-sides-lab/1-door/index.html" width="200px"
+                        height="200px">
+                </iframe>
             </a>
         </div>
-    </main>
+        <div class="mdl-cell mdl-cell--1-col">
+            <a class="mdl-navigation__link" href="https://nannz.github.io/projects/both-sides-lab/2-clock/index.html">
+                <iframe src="https://nannz.github.io/projects/both-sides-lab/2-clock/index.html" width="200px"
+                        height="200px">
+                </iframe>
+            </a>
+        </div>
+    </div>
 </div>
 </body>
 </html>
