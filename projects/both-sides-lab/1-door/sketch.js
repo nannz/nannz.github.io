@@ -13,7 +13,6 @@ function setup() {
 
 function draw() {
   background(h,s,b);
-  print(mouseX);
   if(mouseX > 0 && mouseX <200 && mouseY >0 && mouseY < 200){
     b = 100;
   }else{
