@@ -5,7 +5,7 @@ var waveCenterY = 0.0;
 var rotateAngle = 0.0;
 var rotateAngle2 = 0.0;
 function preload() {
-  boat = loadImage('assets/boat.png');
+  boat = loadImage('https://nannz.github.io/projects/both-sides-lab/3-boat/assets/boat.png ');
   drop = loadImage('assets/drop-big.png');
 }
 
