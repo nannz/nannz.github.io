@@ -5,8 +5,8 @@ var waveCenterY = 0.0;
 var rotateAngle = 0.0;
 var rotateAngle2 = 0.0;
 function preload() {
-  boat = loadImage('./boat.png');
-  drop = loadImage('./drop-big.png');
+  boat = loadImage('assets/boat.png');
+  drop = loadImage('assets/drop-big.png');
 }
 
 function setup() {
