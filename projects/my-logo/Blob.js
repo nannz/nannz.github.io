@@ -2,8 +2,8 @@
 
 class Blob extends Vehicle {
   constructor(x, y, size) {
-    super(x);
-    super(y);
+    super(x,y,size);
+    // super(y);
     this.pos = createVector(x, y);
     this.size = size;
     this.sizeFreq = random(0.01, 0.05);
