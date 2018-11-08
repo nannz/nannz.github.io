@@ -7,6 +7,7 @@ class Tadpole {
       this.acc = createVector();
       this.r = 8;
       this.mass = 1;
+      this.isDead = false;
 
       this.maxSpeed = 2; // max speed;
       this.maxSteerForce = 0.05; // max steering force
@@ -69,6 +70,7 @@ class Tadpole {
     this.acc.add(force);
   }
   flock(tadpoles) {
+    //attracted by the mouse
     var mouseVec = createVector(mouseX, mouseY);
     var seekForce = this.seek(mouseVec);
     var sepaForce = this.separate(tadpoles);
