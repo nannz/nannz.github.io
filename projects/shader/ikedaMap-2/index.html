@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<head>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.min.js">
+</script>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<style>
+		body {
+			margin: 0px;
+			background-color: #000000;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<script id="vertexShader" type="x-shader/x-vertex">
+		uniform highp float time;
+
+		void main() {
+	        gl_Position = vec4(position,1.0) ;                
+		}
+
+</script>
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		precision mediump float;
+        
+        uniform vec2 resolution;
+        uniform vec2 mouse;
+        uniform highp float time;
+		#define M_PI 3.14159265358979323846
+
+        float line(vec2 pos, float funct) {
+            float lineWidth = 0.02;
+           return step(funct,pos.y)-step(funct,pos.y-lineWidth);
+        }
+
+
+		float noiseLine(vec2 pos, float funct) {
+			float lineWidth = 0.02;
+			return step(funct,pos.y)-step(funct,pos.y-lineWidth);
+		}
+
+		//https://en.wikipedia.org/wiki/Ikeda_map
+		 float u = abs(cos(1.0 / time*0.1));//0.9;
+		const int MAX_ITERATIONS = 100;
+        float ikedaMap(vec2 pos, float proVal){
+			float t = 0.0;
+			for(int i = 0; i < MAX_ITERATIONS; i++){
+				t = 0.4 - 6. / ( 1. + pos.x * pos.x + pos.y * pos.y);//pow(pos.x,2.0)
+				pos.x = 1. + u*(pos.x * cos(t) - pos.y * sin(t));
+				pos.y = u * (pos.x * sin(t) + pos.y * cos(t));
+
+				if(length(pos)>abs(sin(time)) && length(pos)<abs(sin(time))*proVal){
+					return length(pos);
+				}
+			}
+			return 0.0;
+		}
+        void main(){
+			vec2 normCoord = gl_FragCoord.xy/resolution;
+			float aspect = resolution.x/resolution.y;
+			vec2 translate = resolution.xy/2.;
+			//vec2 pos = (gl_FragCoord.xy - translate);
+			float mouseNormX = mouse.x/resolution.x;
+			for (int i = 0; i < 4; i ++){
+			}
+			float angle = M_PI * mouse.x;//mouseNormX;
+			mat2 rotation = mat2(cos(angle), sin(angle),
+			-sin(angle), cos(angle));
+			vec2 pos2 =rotation *  (gl_FragCoord.xy - translate);
+			float ikedaColour2  = ikedaMap(pos2,1.2);
+
+			angle += M_PI;
+			rotation = mat2(cos(angle), sin(angle), -sin(angle), cos(angle));
+			vec2 pos3 =rotation *  (gl_FragCoord.xy - translate);
+			float ikedaColour3  =ikedaMap(pos3,1.2);
+
+			//vec3 filterColor = vec3(0.9*abs(sin(time*0.1)), 0.9*abs(sin(time*0.1 )), 0.9 * abs(sin(time*0.1)*cos(time*0.1)));
+			//r => 0.5 ~ 0.8
+			vec3 filterColor = vec3(0.5+0.3*sin(time),0.8+ 0.1 * sin(time),0.9);
+			gl_FragColor = vec4((vec3(ikedaColour2) + vec3(ikedaColour3)) + filterColor,1.);
+        }
+</script>
+	<script>
+		//Shader of IKEDA MAP -- https://en.wikipedia.org/wiki/Ikeda_map
+		//created by Nan Zhao | nan.nz.zhao@gmail.com
+		//2020.12
+
+		//change the resolution here. 1 is highest
+		var pixel_resolution = 2;
+		var stats;
+		var camera, scene, renderer;
+		var uniforms;
+		init();
+		animate();
+		function init() {
+
+			camera = new THREE.Camera();
+			camera.position.z = 1;
+			scene = new THREE.Scene();
+			var geometry = new THREE.PlaneBufferGeometry(2,2);
+			uniforms = { time: { type: 'f', value: 1.0 }, resolution: { type: 'v2', value: new THREE.Vector2() }, mouse: {type: "v2", value: new THREE.Vector2()}};
+			var material = new THREE.ShaderMaterial({ uniforms: uniforms, vertexShader: document.getElementById('vertexShader').textContent, fragmentShader: document.getElementById('fragmentShader').textContent });
+			var mesh = new THREE.Mesh(geometry, material);
+			scene.add(mesh);
+			renderer = new THREE.WebGLRenderer();
+			//Hack here to change resolution 
+			renderer.setPixelRatio(window.devicePixelRatio / pixel_resolution);
+			document.body.appendChild(renderer.domElement);
+			onWindowResize();
+			window.addEventListener('resize', onWindowResize, false);
+	        window.addEventListener('mousemove', onMouseMove, false);
+
+		}
+		function onWindowResize(event) {
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			uniforms.resolution.value.x = renderer.domElement.width;
+			uniforms.resolution.value.y = renderer.domElement.height;
+
+		}
+		function animate() {
+			requestAnimationFrame(animate);
+			render();
+		}
+		function onMouseMove( event ) {
+        	uniforms.mouse.value.x = ( event.clientX / window.innerWidth );
+ 	        uniforms.mouse.value.y = ( 1-(event.clientY) / window.innerHeight
+ 	        );
+        }
+		function render() {
+			uniforms.time.value += 0.01;
+			renderer.render(scene, camera);
+		}
+
+</script>
+</body>
+</html>
