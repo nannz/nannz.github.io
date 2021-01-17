@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <script src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.min.js">
+</script>
+	<style>
+		body {
+			margin: 0px;
+			background-color: #000000;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<script id="vertexShader" type="x-shader/x-vertex">
+		void main() { gl_Position = vec4( position, 1.0 ); }
+
+</script>
+  
+	<script id="fragmentShader" type="x-shader/x-fragment">
+
+        precision mediump float;
+        
+        uniform vec2 resolution;
+        uniform vec2 mouse;
+        uniform float time;
+
+		#define fuzziness 0.001
+		#define noisiness 0.01
+
+		#define passes 101
+
+		// Demonic noise generation
+		float noise(float xo) {
+			float output2 = fract(636.*xo*sin(xo*cos(xo)));
+			return output2;
+		}
+
+		void main() {
+			// Change 256 into the correct scale you need
+			vec2 p = gl_FragCoord.xy / vec2(128.);
+
+			vec2 pre;
+			for(int i=1;i<passes;i++)
+			{
+				pre = p;
+				pre.x += 0.7/float(i)*sin(float(i)*pre.y+time)-1.0;
+				pre.y += 0.7/float(i)*sin(float(i)*pre.x-time)-1.0;
+
+				// fuzziness
+				pre.x += noise(pre.y)*fuzziness;
+				pre.y += noise(pre.x)*fuzziness;
+
+				p = pre;
+			}
+
+			float col = (0.5+(sin(p.y+p.x))*0.3) + (noise(p.y) * noisiness);
+
+			// Set the final colors
+			gl_FragColor=vec4(col+0.1, col*0.7+sin(time)*0.2, 0.3 + col*0.4, (1.0));
+			//gl_FragColor=vec4(col, col, col, (1.0));
+        }
+
+</script>
+	<script>
+      	//flow - using Domain Wrapping Technique
+		//Nan Zhao | nanzhao.site
+		//2020.12
+
+		//change the resolution here. 1 is highest
+		var pixel_resolution = 5;
+		var container, stats;
+		var camera, scene, renderer;
+		var uniforms;
+		init();
+		animate();
+		function init() {
+			camera = new THREE.Camera();
+			camera.position.z = 1;
+			scene = new THREE.Scene();
+			var geometry = new THREE.PlaneBufferGeometry(2, 2);
+			uniforms = { time: { type: 'f', value: 1.0 }, resolution: { type: 'v2', value: new THREE.Vector2() }, mouse: {type: "v2", value: new THREE.Vector2()}};
+			var material = new THREE.ShaderMaterial({ uniforms: uniforms, vertexShader: document.getElementById('vertexShader').textContent, fragmentShader: document.getElementById('fragmentShader').textContent });
+			var mesh = new THREE.Mesh(geometry, material);
+			scene.add(mesh);
+			renderer = new THREE.WebGLRenderer();
+			//Hack here to change resolution 
+			renderer.setPixelRatio(window.devicePixelRatio / pixel_resolution);
+			document.body.appendChild(renderer.domElement);
+			onWindowResize();
+			window.addEventListener('resize', onWindowResize, false);
+	        window.addEventListener('mousemove', onMouseMove, false);
+
+		}
+		function onWindowResize(event) {
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			uniforms.resolution.value.x = renderer.domElement.width;
+			uniforms.resolution.value.y = renderer.domElement.height;
+
+		}
+		function animate() {
+			requestAnimationFrame(animate);
+			render();
+		}
+		function onMouseMove( event ) {
+        	uniforms.mouse.value.x = 2 * ( event.clientX / window.innerWidth );
+ 	        uniforms.mouse.value.y = 2 * ( 1-(event.clientY) / window.innerHeight
+ 	        );
+        }
+		function render() {
+			uniforms.time.value += 0.01;
+			renderer.render(scene, camera);
+		}
+
+</script>
+</body>
+</html>
