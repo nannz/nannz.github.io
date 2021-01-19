@@ -31,6 +31,26 @@ canvas.setAttribute("height", height);
 // This works out a frequency we can use that matches the buffersize
 var bufferFreq=44100/1024;
 
+let playAudio = () => {
+    //playButton.style.display="none";
+    maxiAudio.init();
+
+    maxiAudio.play = function(){
+        //var wave = (osc.sawn(bufferFreq) - osc2.sawn(bufferFreq*1.001));
+        var wave = osc.sinewave(bufferFreq+osc2.sinewave(bufferFreq*changeThis)*osc3.sinewave(0.01)*1000);
+        //var wave2 = osc4.sinewave(bufferFreq*osc5.sinewave(bufferFreq*0.5)*osc6.sinewave(0.01)*100);
+        // var wave2 = osc3.sinewave(bufferFreq*osc4.sinewave(bufferFreq));
+        var wave2 = (osc.sawn(bufferFreq) - osc3.sawn(bufferFreq*10.01));
+        counter++;
+
+        drawOutput[counter % 1024] = wave;
+        drawCentre[counter % 1024] = wave2;
+        return wave * 0.0;
+    }
+
+}
+//playButton.addEventListener("click", () => playAudio());
+
 maxiAudio.play = function(){
     var wave = osc.sinewave(bufferFreq+osc2.sinewave(bufferFreq*changeThis)*osc3.sinewave(0.01)*1000);
 
