@@ -39,7 +39,7 @@ maxiAudio.play = function(){
 
     drawOutput[counter % 1024] = wave;
     drawCentre[counter % 1024] = wave2;
-    return wave * 0.0;
+    return wave * 0.0001;
 }
 
 
